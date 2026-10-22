@@ -1,0 +1,13 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<h1>SelfReserve</h1>
+
+{% if user.is_authenticated %}
+    <p>سلام {{ user.first_name }}</p>
+    <a href="{% url 'logout' %}">خروج</a>
+{% else %}
+    <a href="{% url 'login' %}">ورود</a>
+    <a href="{% url 'register' %}">ثبت‌نام</a>
+{% endif %}
+{% endblock %}

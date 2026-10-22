@@ -1,0 +1,21 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<h2>ثبت‌نام</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="text" name="first_name" placeholder="نام" value="{{ first_name }}" required>
+    <input type="text" name="last_name" placeholder="نام خانوادگی" value="{{ last_name }}" required>
+    <input type="text" name="username" placeholder="نام کاربری" value="{{ username }}" required>
+    <input type="email" name="email" placeholder="ایمیل" value="{{ email }}" required>
+    <input type="text" name="phone_number" placeholder="شماره تلفن" value="{{ phone_number }}" required>
+    <input type="password" name="password" placeholder="رمز عبور" required>
+    <input type="password" name="confirm_password" placeholder="تکرار رمز عبور" required>
+
+    <button type="submit">ثبت‌نام</button>
+</form>
+
+<a href="{% url 'login' %}">قبلاً ثبت‌نام کرده‌ام</a>
+{% endblock %}

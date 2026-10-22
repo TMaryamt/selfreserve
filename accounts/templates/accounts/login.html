@@ -1,0 +1,17 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<h2>ورود</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="text" name="username" placeholder="نام کاربری" required>
+    <input type="password" name="password" placeholder="رمز عبور" required>
+
+    <button type="submit">ورود</button>
+</form>
+
+<a href="{% url 'register' %}">ثبت‌نام</a>
+<a href="{% url 'forgot-password' %}">فراموشی رمز</a>
+{% endblock %}
