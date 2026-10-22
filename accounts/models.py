@@ -1,0 +1,23 @@
+
+
+# Create your models here.
+import uuid
+from django.conf import settings
+from django.db import models
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15, unique=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+class PasswordReset(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    reset_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    created_when = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Password reset for {self.user.username} at {self.created_when}"
