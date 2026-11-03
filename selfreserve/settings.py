@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-v(_@tlrd65d#fz2xu=ktnl**0_5msq7+0vakq=0kh3*g25fr3h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -37,8 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts',
     'rest_framework',
-    'accounts' ,
+    'rest_framework.authtoken',
     
 ]
 
@@ -135,3 +135,10 @@ MAILERS = {
 }
 
 LOGIN_URL = 'login'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+

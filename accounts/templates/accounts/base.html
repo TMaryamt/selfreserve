@@ -1,20 +1,21 @@
-<!DOCTYPE html>
+{% load static %}
+<!doctype html>
 <html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>{% block title %}SelfReserve{% endblock %}</title>
-</head>
-<body>
-
+  </head>
+  <body>
     {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    {% block content %}{% endblock %}
-
-</body>
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% block content %}{% endblock %}
+  </body>
 </html>
