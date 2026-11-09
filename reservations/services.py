@@ -6,7 +6,7 @@ services.py
 
 import requests
 
-from .models import SelfProfile
+from .models import Food, SelfProfile
 from .self_client import SelfClient, SelfError
 
 
@@ -50,3 +50,22 @@ def get_logged_in_client(user):
         raise SelfError("این کاربر هنوز اطلاعات سلف را ثبت نکرده است")
 
     return _login_or_raise(profile.self_username, profile.get_self_password())
+
+
+def update_food_catalog(menu):
+    """
+    همه غذاهای این منو (حتی وعده‌های غیرفعال) را به فهرست غذاهای ما اضافه میکند.
+    menu همان جواب خام سلف است (client.get_menu()).
+    """
+    for day in menu:
+        for meal in day.get("Meals", []):
+            type_names = {t["ID"]: t["Name"] for t in meal.get("FoodTypeMenu", [])}
+            for food in meal.get("FoodMenu", []):
+                Food.objects.update_or_create(
+                    food_id=food["FoodId"],
+                    defaults={
+                        "name": " ".join(food["FoodName"].split()),
+                        "food_type": food["FoodType"],
+                        "food_type_name": type_names.get(food["FoodType"], ""),
+                    },
+                )

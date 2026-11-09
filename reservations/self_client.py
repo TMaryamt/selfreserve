@@ -161,22 +161,31 @@ class SelfClient:
         # navigation=0 یعنی هفته جاری؛ lastdate خالی است (مثل مرورگر)
         return self.api_get(MENU_PATH, params={"lastdate": "", "navigation": 0})
 
-    def get_open_meals(self):
+    def get_open_meals(self, menu=None):
         """
         از جواب کامل سایت فقط وعده‌هایی را برمیگرداند که الان قابل رزرو هستند
         (MealState برابر 0 یعنی «فعال») و غذا و سلف‌هایشان را ساده میکند.
+        اگر menu داده نشود، خودش منو را از سایت میگیرد.
         """
+        if menu is None:
+            menu = self.get_menu()
+
         result = []
-        for day in self.get_menu():
+        for day in menu:
             for meal_index, meal in enumerate(day.get("Meals", [])):
                 if meal.get("MealState") != 0:
                     continue
+
+                # نام نوع غذاها (مثل «غذا») در FoodTypeMenu است
+                type_names = {t["ID"]: t["Name"] for t in meal.get("FoodTypeMenu", [])}
 
                 foods = []
                 for food in meal.get("FoodMenu", []):
                     foods.append({
                         "food_id": food["FoodId"],
-                        "food_name": food["FoodName"],
+                        "food_name": " ".join(food["FoodName"].split()),
+                        "food_type": food["FoodType"],
+                        "food_type_name": type_names.get(food["FoodType"], ""),
                         "selfs": [
                             {
                                 "self_id": s["SelfId"],
