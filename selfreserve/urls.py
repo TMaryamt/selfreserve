@@ -21,5 +21,8 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
+    path('api/auth/', include('accounts.api_urls')),
     path('', TemplateView.as_view(template_name='accounts/home.html'), name='home'),
+    path('api/self/', include('reservations.api_urls')),
 ]
+

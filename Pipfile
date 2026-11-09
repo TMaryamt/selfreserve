@@ -5,6 +5,9 @@ name = "pip_conf_index_:env:"
 
 [packages]
 django = {version = "*", index = "pip_conf_index_:env:"}
+requests = {version = "*", index = "pip_conf_index_:env:"}
+beautifulsoup4 = {version = "*", index = "pip_conf_index_:env:"}
+cryptography = {version = "*", index = "pip_conf_index_:env:"}
 
 [dev-packages]
 
