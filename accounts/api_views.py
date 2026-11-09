@@ -110,6 +110,9 @@ class ForgotPasswordView(APIView):
 
             # لینک به صفحه React میرود، نه به خود جنگو
             link = "%s/reset-password/%s" % (settings.FRONTEND_URL.rstrip("/"), reset.reset_id)
+            if settings.DEBUG:
+                # فقط در حالت توسعه: لینک را خوانا در ترمینال سرور چاپ میکنیم
+                print("RESET LINK:", link)
             EmailMessage(
                 "بازیابی رمز عبور",
                 "برای تعیین رمز جدید روی لینک زیر بزنید (10 دقیقه اعتبار دارد):\n\n" + link,
