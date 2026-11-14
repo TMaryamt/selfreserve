@@ -2,51 +2,71 @@
 <style>
   @import url("https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css");
 
-  * {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
     font-family: "Vazirmatn", sans-serif;
     margin: 0;
     padding: 0;
   }
 
+  html,
   body {
-    background-color: #0f172a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    min-height: 100%;
     margin: 0;
+    padding: 0;
+    background-color: #0f172a; /* فقط روی دسکتاپ دیده می‌شود */
   }
 
-  /* قاب گوشی موبایل با پس‌زمینه عکس دانشگاه */
+  /* ---------- قاب اصلی ---------- */
+  /* روی موبایل: تمام صفحه، بدون حاشیه */
   .mobile-container {
     width: 100%;
-    max-width: 412px;
-    min-height: 915px;
+    max-width: 440px;
+    min-height: 100vh; /* fallback */
+    min-height: 100dvh; /* ارتفاع واقعی بدون نوار آدرس مرورگر */
+    margin: 0 auto;
     position: relative;
-    background: url("{% static 'images/campus.jpg' %}") center bottom/cover
-      no-repeat;
     display: flex;
     flex-direction: column;
     direction: rtl;
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45);
+    background: url("{% static 'images/campus.png' %}") center bottom / cover
+      no-repeat;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  /* محفظه هدر */
+  /* روی دسکتاپ/تبلت: شبیه قاب گوشی */
+  @media (min-width: 500px) {
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+    .mobile-container {
+      min-height: min(100dvh, 915px);
+      border-radius: 28px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  /* ---------- هدر ---------- */
   .header-wrapper {
     position: relative;
     width: 100%;
+    flex-shrink: 0;
     margin-bottom: 28px;
   }
 
-  /* لایه هاله سفید یکدست زیر بیضی */
   .header-halo-curve {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 335px;
+    height: calc(100% + 25px);
     background-color: rgba(220, 238, 253, 0.92);
     border-bottom-left-radius: 50% 68px;
     border-bottom-right-radius: 50% 68px;
@@ -55,34 +75,32 @@
     pointer-events: none;
   }
 
-  /* هدر اصلی سبز رنگ */
   .header-curved {
-    background-color: #10b981;
+    position: relative;
+    z-index: 2;
     width: 100%;
-    height: 310px;
+    height: clamp(240px, 36dvh, 310px);
+    background-color: #10b981;
     border-bottom-left-radius: 50% 65px;
     border-bottom-right-radius: 50% 65px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 24px 20px 30px;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 30px;
     text-align: center;
     color: #042f2c;
-    position: relative;
-    z-index: 2;
   }
 
-  /* دایره سفید لوگو با پسوند jpg */
   .logo-circle {
-    width: 110px;
-    height: 110px;
+    width: clamp(84px, 14dvh, 110px);
+    aspect-ratio: 1 / 1;
     background-color: #ffffff;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
     overflow: hidden;
   }
@@ -93,28 +111,27 @@
     object-fit: contain;
   }
 
-  .header-curved h1 {
-    font-size: 21px;
+  .header-curved h1,
+  .header-curved p {
+    font-size: clamp(17px, 5.2vw, 21px);
     font-weight: 700;
     color: #042f2c;
+  }
+
+  .header-curved h1 {
     margin-bottom: 8px;
   }
 
-  .header-curved p {
-    font-size: 21px;
-    font-weight: 700;
-    color: #042f2c;
-  }
-
-  /* بخش فرم و فیلدهای ورودی */
+  /* ---------- فرم ---------- */
   .form-container {
-    padding: 15px 24px 25px;
+    flex: 1; /* فضای باقی‌مانده را پر می‌کند */
     display: flex;
     flex-direction: column;
+    padding: 15px 24px 25px;
+    position: relative;
     z-index: 2;
   }
 
-  /* کادر سفید ورودی */
   .input-box {
     background: #ffffff;
     border: 1.5px solid #1f2937;
@@ -135,7 +152,6 @@
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
   }
 
-  /* آیکون مشکی در سمت راست */
   .input-icon {
     display: flex;
     align-items: center;
@@ -148,6 +164,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    min-width: 0;
   }
 
   .input-content label {
@@ -161,7 +178,7 @@
     border: none;
     outline: none;
     background: transparent;
-    font-size: 13.5px;
+    font-size: 16px; /* زیر ۱۶px آیفون هنگام تایپ زوم می‌کند */
     color: #374151;
     width: 100%;
     padding: 0;
@@ -173,7 +190,6 @@
     font-size: 12.5px;
   }
 
-  /* لینک فراموشی رمز عبور وسط‌چین همراه با هاله بیضی */
   .forgot-container {
     display: flex;
     justify-content: center;
@@ -183,17 +199,22 @@
     width: 100%;
   }
 
-  .forgot-oval-halo {
-    width: 85%;
-    max-width: 290px;
-    height: 42px;
+  .forgot-oval-halo,
+  .footer-oval-halo {
     background: rgba(255, 255, 255, 0.52);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border-radius: 50%;
     display: flex;
-    justify-content:center;
+    justify-content: center;
     align-items: center;
+    text-align: center;
+  }
+
+  .forgot-oval-halo {
+    width: 85%;
+    max-width: 290px;
+    height: 42px;
   }
 
   .forgot-oval-halo a {
@@ -203,7 +224,6 @@
     text-decoration: none;
   }
 
-  /* دکمه ورود */
   .btn-login {
     width: 100%;
     height: 52px;
@@ -230,12 +250,13 @@
     transform: translateY(0);
   }
 
-  /* هاله بیضی ملایم فوتر */
+  /* فوتر همیشه ته صفحه می‌چسبد */
   .footer-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 22px;
+    margin-top: auto;
+    padding-top: 22px;
     width: 100%;
   }
 
@@ -243,14 +264,7 @@
     width: 90%;
     max-width: 325px;
     height: 44px;
-    background: rgba(255, 255, 255, 0.52);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14.5px;
+    font-size: 14px;
     font-weight: 700;
     color: #111827;
   }
@@ -263,26 +277,21 @@
 </style>
 
 <div class="mobile-container">
-  <!-- هدر سبز همراه با هاله منحنی یکدست در زیر آن -->
   <div class="header-wrapper">
     <div class="header-curved">
       <div class="logo-circle">
-        <img src="{% static 'images/logo.jpg' %}" alt="لوگو سلف" />
+        <img src="{% static 'images/logo.png' %}" alt="لوگو سلف" />
       </div>
       <h1>رزرو اتوماتیک غذای سلف</h1>
       <p>به اپلیکشن ما خوش آمدید</p>
     </div>
-
-    <!-- هاله یکنواخت هلالی زیر بیضی -->
     <div class="header-halo-curve"></div>
   </div>
 
-  <!-- فرم ورود -->
   <div class="form-container">
     <form method="POST">
       {% csrf_token %}
 
-      <!-- فیلد نام کاربری -->
       <div class="input-box">
         <div class="input-icon">
           <svg
@@ -300,17 +309,18 @@
           </svg>
         </div>
         <div class="input-content">
-          <label>نام کاربری</label>
+          <label for="username">نام کاربری</label>
           <input
+            id="username"
             type="text"
             name="username"
             placeholder="نام کاربری را وارد کنید"
+            autocomplete="username"
             required
           />
         </div>
       </div>
 
-      <!-- فیلد رمز عبور -->
       <div class="input-box">
         <div class="input-icon">
           <svg
@@ -328,28 +338,27 @@
           </svg>
         </div>
         <div class="input-content">
-          <label>رمز عبور</label>
+          <label for="password">رمز عبور</label>
           <input
+            id="password"
             type="password"
             name="password"
             placeholder="رمز را وارد کنید"
+            autocomplete="current-password"
             required
           />
         </div>
       </div>
 
-      <!-- لینک فراموشی رمز عبور -->
       <div class="forgot-container">
         <div class="forgot-oval-halo">
           <a href="{% url 'forgot-password' %}">رمز عبور را فراموش کرده اید؟</a>
         </div>
       </div>
 
-      <!-- دکمه ورود -->
       <button type="submit" class="btn-login">ورود</button>
     </form>
 
-    <!-- فوتر با هاله بیضی شیشه‌ای -->
     <div class="footer-container">
       <div class="footer-oval-halo">
         حساب کاربری ندارید؟ <a href="{% url 'register' %}">ثبت نام کنید</a>

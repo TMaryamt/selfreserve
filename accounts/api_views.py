@@ -14,6 +14,7 @@ from django.core.mail import EmailMessage
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -156,3 +157,29 @@ class ResetPasswordView(APIView):
         Token.objects.filter(user=user).delete()
 
         return Response({"detail": "رمز عبور با موفقیت تغییر کرد"})
+
+
+# ------------------------------------------------------------
+# سازگاری با اپ موبایل (نوشته شبنم)
+# آدرس: /accounts/api/login/ ، بعداً که فرانت به /api/auth/login/ وصل شد حذف میشود.
+# ------------------------------------------------------------
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def api_login(request):
+    user = authenticate(
+        username=str(request.data.get('username', '')).lower().strip(),
+        password=request.data.get('password', ''),
+    )
+
+    if not user:
+        return Response(
+            {'error': 'نام کاربری یا رمز اشتباه است'},
+            status=400
+        )
+
+    token, _ = Token.objects.get_or_create(user=user)
+
+    return Response({
+        'token': token.key,
+        'username': user.username
+    })
